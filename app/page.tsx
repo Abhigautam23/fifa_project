@@ -5,6 +5,7 @@ import type { Match } from '@/lib/types'
 import StatCard from '@/components/StatCard'
 import PnLChart from '@/components/PnLChart'
 import MatchTable from '@/components/MatchTable'
+import SoccerBall from '@/components/SoccerBall'
 
 export default async function Page() {
   const supabase = createSupabaseClient()
@@ -36,13 +37,18 @@ export default async function Page() {
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100 px-4 sm:px-8 py-10 max-w-6xl mx-auto">
       {/* Header */}
-      <header className="mb-10">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Data vs Bet365 — World Cup 2026
-        </h1>
-        <p className="text-zinc-400 mt-2 text-sm leading-relaxed max-w-2xl">
-          £1 flat stake, every bet. Elo-derived model vs Bet365 closing odds.
-          All predictions posted on{' '}
+      <header className="mb-14">
+        <div className="flex items-center gap-3 mb-4">
+          <SoccerBall size={44} className="text-zinc-300 shrink-0" />
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Data vs Bet365: World Cup 2026
+          </h1>
+        </div>
+        <p className="text-base sm:text-lg font-semibold text-zinc-100 leading-snug">
+          Every match. Every call. £1 on the line.
+        </p>
+        <p className="text-sm text-zinc-400 mt-1.5 leading-relaxed max-w-2xl">
+          Elo-derived model vs Bet365 closing odds — all predictions posted on{' '}
           <a
             href="https://x.com/gautamabhi629"
             className="text-blue-400 hover:text-blue-300 underline underline-offset-2"
@@ -61,6 +67,7 @@ export default async function Page() {
           label="Running P&L"
           value={pnlStr}
           valueClass={totalPnl >= 0 ? 'text-green-400' : 'text-red-400'}
+          valueSize="text-4xl"
         />
         <StatCard
           label="Record"

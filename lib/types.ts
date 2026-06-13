@@ -3,9 +3,9 @@ export type Match = {
   match_name: string
   match_number: number
   kickoff_at: string
-  my_prob_home: number
-  my_prob_draw: number
-  my_prob_away: number
+  my_prob_home: number | null
+  my_prob_draw: number | null
+  my_prob_away: number | null
   bookmaker_odds: number | null
   implied_prob: number | null
   bet_selection: 'home' | 'draw' | 'away' | null
@@ -14,5 +14,8 @@ export type Match = {
   result: 'pending' | 'won' | 'lost' | 'no_bet'
   pnl: number | null
   notes: string | null
+  home_crest: string | null
+  away_crest: string | null
+  stage: string | null
   created_at: string
 }

@@ -33,6 +33,7 @@ function ResultBadge({ result }: { result: string }) {
 
 export default function MatchTable({ matches }: { matches: Match[] }) {
   const sorted = [...matches].sort((a, b) => b.match_number - a.match_number)
+  const hasCrests = sorted.some((m) => m.home_crest || m.away_crest)
 
   return (
     <div className="overflow-x-auto">
@@ -73,27 +74,71 @@ export default function MatchTable({ matches }: { matches: Match[] }) {
                 key={match.id}
                 className={`${rowStyle(match)} border-b border-zinc-800/40`}
               >
+                {/* Match name + crests + stage */}
                 <td className="py-3 pr-4">
-                  <div className="text-zinc-100 font-medium">{match.match_name}</div>
-                  <div className="text-zinc-500 text-xs font-mono mt-0.5">
-                    {formatKickoff(match.kickoff_at)}
+                  <div className="flex items-start gap-2.5">
+                    {hasCrests && (
+                      <div className="flex items-center gap-1 pt-0.5 shrink-0">
+                        {match.home_crest ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={match.home_crest}
+                            alt=""
+                            width={18}
+                            height={18}
+                            className="object-contain"
+                          />
+                        ) : (
+                          <span className="w-[18px]" />
+                        )}
+                        {match.away_crest ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={match.away_crest}
+                            alt=""
+                            width={18}
+                            height={18}
+                            className="object-contain"
+                          />
+                        ) : (
+                          <span className="w-[18px]" />
+                        )}
+                      </div>
+                    )}
+                    <div>
+                      <div className="text-zinc-100 font-medium leading-snug">
+                        {match.match_name}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                        <span className="text-zinc-500 text-xs font-mono">
+                          {formatKickoff(match.kickoff_at)}
+                        </span>
+                        {match.stage && (
+                          <span className="text-[10px] font-mono text-zinc-500 bg-zinc-800/80 border border-zinc-700/50 px-1.5 py-px rounded uppercase tracking-wide">
+                            {match.stage}
+                          </span>
+                        )}
+                      </div>
+                      {match.notes && (
+                        <div className="text-zinc-600 text-xs mt-0.5 italic">
+                          {match.notes}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  {match.notes && (
-                    <div className="text-zinc-500 text-xs mt-0.5 italic">{match.notes}</div>
-                  )}
                 </td>
 
                 <td className="py-3 pr-4 text-right font-mono text-zinc-300 whitespace-nowrap">
                   <span className={match.bet_selection === 'home' ? 'text-blue-400 font-bold' : ''}>
-                    {match.my_prob_home}%
+                    {match.my_prob_home != null ? `${match.my_prob_home}%` : '—'}
                   </span>
                   <span className="text-zinc-600"> / </span>
                   <span className={match.bet_selection === 'draw' ? 'text-blue-400 font-bold' : ''}>
-                    {match.my_prob_draw}%
+                    {match.my_prob_draw != null ? `${match.my_prob_draw}%` : '—'}
                   </span>
                   <span className="text-zinc-600"> / </span>
                   <span className={match.bet_selection === 'away' ? 'text-blue-400 font-bold' : ''}>
-                    {match.my_prob_away}%
+                    {match.my_prob_away != null ? `${match.my_prob_away}%` : '—'}
                   </span>
                 </td>
 

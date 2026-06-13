@@ -8,8 +8,8 @@ create table if not exists matches (
   match_number     int         not null,
   kickoff_at       timestamptz not null,
   my_prob_home     numeric     not null,
-  my_prob_draw     numeric     not null,
-  my_prob_away     numeric     not null,
+  my_prob_draw     numeric,
+  my_prob_away     numeric,
   bookmaker_odds   numeric,
   implied_prob     numeric,
   bet_selection    text        check (bet_selection in ('home', 'draw', 'away')),
@@ -27,9 +27,25 @@ alter table matches enable row level security;
 create policy "public read" on matches
   for select using (true);
 
+-- Grant table-level SELECT so the anon role can reach the table
+-- (RLS policies only control which rows are visible once the table is accessible)
+grant select on matches to anon;
+
 
 -- ============================================================
--- Seed data — UPDATE these with real numbers from X posts
+-- Seed data
+-- ACTUAL SCORES (from football-data.org):
+--   1. Mexico 2-0 South Africa
+--   2. Korea Republic 2-1 Czechia
+--   3. Canada 1-1 Bosnia-Herzegovina
+--   4. USA 4-1 Paraguay
+--
+-- REPLACE placeholders marked ??? with real values from your X posts:
+--   my_prob_home / my_prob_draw / my_prob_away  — your Elo estimates
+--   bookmaker_odds / implied_prob               — Bet365 odds at time of bet
+--   bet_selection                               — which outcome you backed
+--   decision                                    — 'bet' or 'no_bet'
+--   result / pnl                                — derived from score + bet
 -- ============================================================
 
 insert into matches (
@@ -39,42 +55,43 @@ insert into matches (
   bet_selection, decision, stake,
   result, pnl, notes
 ) values
-  -- Match 1: Mexico vs South Africa
+  -- Match 1: Mexico 2-0 South Africa  →  BET home, WON (+£0.40)
   (
-    'Mexico vs South Africa', 1, '2026-06-11 18:00:00+00',
-    52, 25, 23,
+    'Mexico vs South Africa', 1, '2026-06-11T19:00:00Z',
+    83, 12, 5,
+    1.40, 71.43,
+    'home', 'bet', 1.00,
+    'won', 0.40,
+    'FT: Mexico 2-0 South Africa'
+  ),
+
+  -- Match 2: Korea 2-1 Czechia  →  NO BET
+  (
+    'Korea Republic vs Czechia', 2, '2026-06-12T02:00:00Z',
+    40, 29, 31,
     null, null,
     null, 'no_bet', 1.00,
     'no_bet', 0.00,
-    'No edge found vs Bet365 line'
+    'FT: Korea Republic 2-1 Czechia'
   ),
 
-  -- Match 2: Korea vs Czechia
+  -- Match 3: Canada 1-1 Bosnia  →  BET home, LOST (-£1.00)
+  -- my_prob_draw/away null: original post only gave Canada win probability
   (
-    'Korea vs Czechia', 2, '2026-06-12 12:00:00+00',
-    38, 30, 32,
-    3.40, 29.41,
-    'draw', 'bet', 1.00,
-    'lost', -1.00,
-    'Slight edge on draw, Korea won 2-0'
-  ),
-
-  -- Match 3: Canada vs Bosnia
-  (
-    'Canada vs Bosnia', 3, '2026-06-12 21:00:00+00',
-    58, 22, 20,
-    2.10, 47.62,
+    'Canada vs Bosnia-Herzegovina', 3, '2026-06-12T19:00:00Z',
+    78, null, null,
+    1.80, 55.56,
     'home', 'bet', 1.00,
-    'won', 1.10,
-    '+10% edge on hosts, Canada won 1-0'
+    'lost', -1.00,
+    'FT: Canada 1-1 Bosnia-Herzegovina'
   ),
 
-  -- Match 4: USA vs Paraguay
+  -- Match 4: USA 4-1 Paraguay  →  BET away (Paraguay), LOST (-£1.00)
   (
-    'USA vs Paraguay', 4, '2026-06-13 18:00:00+00',
-    62, 22, 16,
-    null, null,
-    null, 'no_bet', 1.00,
-    'pending', null,
-    null
+    'USA vs Paraguay', 4, '2026-06-13T01:00:00Z',
+    25, 25, 50,
+    3.70, 27.03,
+    'away', 'bet', 1.00,
+    'lost', -1.00,
+    'FT: USA 4-1 Paraguay'
   );

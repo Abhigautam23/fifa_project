@@ -73,7 +73,7 @@ export default function PnLChart({ matches }: { matches: Match[] }) {
         <ReferenceLine y={0} stroke="#3f3f46" strokeDasharray="4 4" />
         <Tooltip content={<CustomTooltip />} />
         <Line
-          type="monotone"
+          type="linear"
           dataKey="cumulative"
           stroke="#3b82f6"
           strokeWidth={2}
