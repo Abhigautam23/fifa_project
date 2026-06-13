@@ -1,10 +1,10 @@
 import type { Match } from '@/lib/types'
 
 function rowStyle(match: Match): string {
-  if (match.result === 'won') return 'border-l-2 border-green-500 bg-green-950/20'
-  if (match.result === 'lost') return 'border-l-2 border-red-500 bg-red-950/20'
-  if (match.result === 'pending') return 'border-l-2 border-yellow-500 bg-yellow-950/10 animate-pulse'
-  return 'border-l-2 border-zinc-800 opacity-50'
+  if (match.result === 'won') return 'border-l-4 border-green-500 bg-green-950/20'
+  if (match.result === 'lost') return 'border-l-4 border-red-500 bg-red-950/20'
+  if (match.result === 'pending') return 'border-l-4 border-yellow-500 bg-yellow-950/10 animate-pulse'
+  return 'border-l-4 border-zinc-600 opacity-75'
 }
 
 function formatKickoff(dateStr: string): string {
@@ -47,7 +47,7 @@ export default function MatchTable({ matches }: { matches: Match[] }) {
             <th className="py-3 pr-4 font-medium text-right">Edge</th>
             <th className="py-3 pr-4 font-medium">Decision</th>
             <th className="py-3 pr-4 font-medium">Result</th>
-            <th className="py-3 font-medium text-right">P&amp;L</th>
+            <th className="py-3 pr-4 font-medium text-right">P&amp;L</th>
           </tr>
         </thead>
         <tbody>
@@ -75,7 +75,7 @@ export default function MatchTable({ matches }: { matches: Match[] }) {
                 className={`${rowStyle(match)} border-b border-zinc-800/40`}
               >
                 {/* Match name + crests + stage */}
-                <td className="py-3 pr-4">
+                <td className="py-3 pl-4 pr-4">
                   <div className="flex items-start gap-2.5">
                     {hasCrests && (
                       <div className="flex items-center gap-1 pt-0.5 shrink-0">
@@ -109,18 +109,18 @@ export default function MatchTable({ matches }: { matches: Match[] }) {
                       <div className="text-zinc-100 font-medium leading-snug">
                         {match.match_name}
                       </div>
-                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                        <span className="text-zinc-500 text-xs font-mono">
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <span className="text-zinc-300 text-xs font-mono">
                           {formatKickoff(match.kickoff_at)}
                         </span>
                         {match.stage && (
-                          <span className="text-[10px] font-mono text-zinc-500 bg-zinc-800/80 border border-zinc-700/50 px-1.5 py-px rounded uppercase tracking-wide">
+                          <span className="text-xs font-medium text-zinc-100 bg-zinc-700 border border-zinc-600 px-2 py-0.5 rounded uppercase tracking-wider">
                             {match.stage}
                           </span>
                         )}
                       </div>
                       {match.notes && (
-                        <div className="text-zinc-600 text-xs mt-0.5 italic">
+                        <div className="text-zinc-200 text-xs mt-1.5 leading-relaxed">
                           {match.notes}
                         </div>
                       )}
@@ -132,11 +132,11 @@ export default function MatchTable({ matches }: { matches: Match[] }) {
                   <span className={match.bet_selection === 'home' ? 'text-blue-400 font-bold' : ''}>
                     {match.my_prob_home != null ? `${match.my_prob_home}%` : '—'}
                   </span>
-                  <span className="text-zinc-600"> / </span>
+                  <span className="text-zinc-500"> / </span>
                   <span className={match.bet_selection === 'draw' ? 'text-blue-400 font-bold' : ''}>
                     {match.my_prob_draw != null ? `${match.my_prob_draw}%` : '—'}
                   </span>
-                  <span className="text-zinc-600"> / </span>
+                  <span className="text-zinc-500"> / </span>
                   <span className={match.bet_selection === 'away' ? 'text-blue-400 font-bold' : ''}>
                     {match.my_prob_away != null ? `${match.my_prob_away}%` : '—'}
                   </span>
@@ -178,7 +178,7 @@ export default function MatchTable({ matches }: { matches: Match[] }) {
                   <ResultBadge result={match.result} />
                 </td>
 
-                <td className="py-3 text-right font-mono">
+                <td className="py-3 pr-4 text-right font-mono">
                   {match.pnl != null ? (
                     <span
                       className={

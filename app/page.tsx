@@ -35,7 +35,7 @@ export default async function Page() {
   const roiStr = `${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%`
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-100 px-4 sm:px-8 py-10 max-w-6xl mx-auto">
+    <main className="min-h-screen bg-zinc-950 text-zinc-100 px-6 sm:px-10 py-10 max-w-7xl mx-auto">
       {/* Header */}
       <header className="mb-14">
         <div className="flex items-center gap-3 mb-4">
